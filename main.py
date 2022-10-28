@@ -234,6 +234,14 @@ class Zlapp(Fudan):
                     }
                 )
             else:
+                g = json.loads(self.last_info["geo_api_info"])
+                import random
+                offset = (-1)**random.randint(0, 1) * random.random() * 0.00001
+                g["position"]["Q"] += offset
+                g["position"]["R"] += offset
+                g["position"]["lng"] += offset
+                g["position"]["lat"] += offset
+                new_g = json.dumps(g, ensure_ascii=False)
                 self.last_info.update(
                     {
                         "tw": "13",
@@ -243,9 +251,10 @@ class Zlapp(Fudan):
                         #"sfzx": "1",  # 是否在校
                         #"fxyy": "",  # 返校原因
                         "code": code,
+                        "geo_api_info": new_g,
                     }
                 )
-            # print(self.last_info)
+            print(self.last_info)
             save = self.session.post(
                 'https://zlapp.fudan.edu.cn/ncov/wap/fudan/save',
                 data=self.last_info,
